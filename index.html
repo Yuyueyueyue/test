@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>DEBUG LIFF</title>
+  <meta charset="utf-8" />
+  <title>LIFF UID Form Redirect</title>
 </head>
 <body>
+  <h3>載入中...</h3>
 
-<h2>頁面已載入</h2>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    const liffId = "2009628398-05DKrr3H"; 
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSekCYkT03CuwG2hqoeO4febznVFk8WMklj5QbV-4UWyG-Q1Qg/viewform";
+    const entryId = "entry.1439397279"; // 你的 UID 欄位
 
-<script>
-alert("JS 有跑到這裡");
+    async function main() {
+      try {
+        await liff.init({ liffId });
 
-liff.init({ liffId: "2009628398-05DKrr3H" })
-.then(() => {
+        // 如果還沒登入就導向登入
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
 
-  alert("LIFF init 成功");
+        // 取得使用者資料
+        const profile = await liff.getProfile();
+        const uid = profile.userId;
 
-  if (!liff.isLoggedIn()) {
-    alert("未登入，準備 login");
-    liff.login();
-  } else {
+        console.log("UID:", uid);
 
-    alert("已登入");
+        // 組 Google Form URL
+        const finalUrl =
+          `${formUrl}?${entryId}=${encodeURIComponent(uid)}`;
 
-    liff.getProfile().then(p => {
-      alert("UID：" + p.userId);
-    });
+        // 導向表單
+        window.location.href = finalUrl;
 
-  }
+      } catch (err) {
+        console.error("發生錯誤:", err);
+        document.body.innerHTML = "載入失敗，請重新整理";
+      }
+    }
 
-})
-.catch(err => {
-  alert("LIFF 錯誤：" + JSON.stringify(err));
-});
-</script>
-
+    main();
+  </script>
 </body>
 </html>
