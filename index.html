@@ -8,21 +8,31 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
+<!-- 🔽 把整段 script 放在這裡 -->
 <script>
 liff.init({ liffId: "2009628398-05DKrr3H" }).then(() => {
+
+  alert("LIFF init OK");
+
   if (!liff.isLoggedIn()) {
     liff.login();
   } else {
     liff.getProfile().then(p => {
+
+      alert("拿到UID：" + p.userId);
+
       const uid = p.userId;
 
-      const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSekCYkT03CuwG2hqoeO4febznVFk8WMklj5QbV-4UWyG-Q1Qg/viewform?usp=publish-editor";
+      const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSekCYkT03CuwG2hqoeO4febznVFk8WMklj5QbV-4UWyG-Q1Qg/viewform";
 
-      const finalUrl = formUrl + "&entry.1439397279=" + uid;
+      const finalUrl = formUrl + "?entry.1439397279=" + uid;
 
       window.location.href = finalUrl;
     });
   }
+
+}).catch(err => {
+  alert("LIFF error: " + JSON.stringify(err));
 });
 </script>
 
